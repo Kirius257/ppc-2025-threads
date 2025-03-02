@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
+#include <utility>
 #include <vector>
 
 double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integrate(
