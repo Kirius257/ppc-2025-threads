@@ -25,7 +25,6 @@ class TestTaskOpenMP : public ppc::core::Task {
   Function f_;
   std::vector<double> lower_limits_;
   std::vector<double> upper_limits_;
-  double epsilon_;
   double start_n_;
   double result_;
 
