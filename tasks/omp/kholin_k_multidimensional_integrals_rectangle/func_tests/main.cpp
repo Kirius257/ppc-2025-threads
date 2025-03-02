@@ -418,7 +418,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) {
-    return (-2.4925829 * f_values[0] + sin(f_values[1]) + f_values[2]);
+    return ((-2.4925829 * f_values[0]) + sin(f_values[1]) + f_values[2]);
   };
   std::vector<double> in_lower_limits{2, -2, -5};
   std::vector<double> in_upper_limits{3, 0, 1};
