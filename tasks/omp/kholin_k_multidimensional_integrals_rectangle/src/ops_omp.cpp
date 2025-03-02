@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
-#include <iostream>
 #include <vector>
 
 double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integrate(
@@ -30,13 +29,13 @@ double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integr
     h[i] = (u_limits[i] - l_limits[i]) / n;
   }
 
-  return Integrate(f, l_limits, u_limits, h, f_values, 0, dim, n);
+  return Integrate(f, l_limits, u_limits, h, std::move(f_values), 0, dim, n);
 }
 
 double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::RunMultistepSchemeMethodRectangle(
     const Function& f, std::vector<double> f_values, const std::vector<double>& l_limits,
     const std::vector<double>& u_limits, size_t dim, double n) {
-  double i = IntegrateWithRectangleMethod(f, f_values, l_limits, u_limits, dim, n);
+  double i = IntegrateWithRectangleMethod(f, std::move(f_values), l_limits, u_limits, dim, n);
   return i;
 }
 
