@@ -21,13 +21,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_validation) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -40,7 +40,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_validation) {
   // Create Task
   kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP test_task_omp(task_data_omp);
   ASSERT_EQ(test_task_omp.Validation(), true);
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_pre_processing) {
@@ -53,13 +52,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_pre_processing) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -73,7 +72,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_pre_processing) {
   kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP test_task_omp(task_data_omp);
   ASSERT_EQ(test_task_omp.Validation(), true);
   ASSERT_EQ(test_task_omp.PreProcessing(), true);
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_run) {
@@ -86,13 +84,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_run) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -107,7 +105,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_run) {
   ASSERT_EQ(test_task_omp.Validation(), true);
   ASSERT_EQ(test_task_omp.PreProcessing(), true);
   ASSERT_EQ(test_task_omp.Run(), true);
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_post_processing) {
@@ -120,13 +117,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_post_processing) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -142,7 +139,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_post_processing) {
   ASSERT_EQ(test_task_omp.PreProcessing(), true);
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var) {
@@ -155,13 +151,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var)
   double n = 4002.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -180,7 +176,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var)
 
   double ref_i = 6;
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_two_var) {
@@ -193,13 +188,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_two_var)
   double n = 4000.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -218,7 +213,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_two_var)
 
   double ref_i = 8;
   ASSERT_EQ(ref_i, std::round((out_i[0])));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var) {
@@ -231,13 +225,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var)
   double n = 1000.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -257,7 +251,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var)
   double ref_i = 27.0;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_one_var) {
@@ -270,13 +263,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_one_var)
   double n = 405.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -295,7 +288,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_one_var)
 
   double ref_i = 6027;
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_var) {
@@ -308,13 +300,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -334,7 +326,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   double ref_i = 24;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_two_var) {
@@ -347,13 +338,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_two_var)
   double n = 100.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -373,7 +364,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_two_var)
   double ref_i = 8;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_one_var) {
@@ -386,13 +376,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_one_var)
   double n = 100.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -412,7 +402,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_one_var)
   double ref_i = -24;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_EQ(ref_i, std::round(out_i[0]));
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_var_high_acc) {
@@ -427,13 +416,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -453,7 +442,6 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   double ref_i = 1.0555555555;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_NEAR(ref_i, out_i[0], 1e-3);
-  delete f_object;
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_high_acc) {
@@ -466,13 +454,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   double n = 300.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -492,5 +480,4 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   double ref_i = 0.02777777778;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_NEAR(ref_i, out_i[0], 1e-3);
-  delete f_object;
 }
