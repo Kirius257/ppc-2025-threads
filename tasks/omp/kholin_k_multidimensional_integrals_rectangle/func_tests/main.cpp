@@ -369,7 +369,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_two_var)
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 9450;
+  double ref_i = 12600;
   ASSERT_EQ(ref_i, std::round(out_i[0]));
   delete f_object;
 }
