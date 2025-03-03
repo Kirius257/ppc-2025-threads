@@ -14,7 +14,7 @@ double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integr
   }
 
   double sum = 0.0;
-#pragma omp parallel for reduction(+ : sum) schedule(dynamic)
+#pragma omp parallel for reduction(+ : sum) schedule(dynamic) num_threads(16)
   for (int i = 0.0; i < static_cast<int>(n); ++i) {
     f_values[curr_index_dim] = l_limits[curr_index_dim] + (static_cast<double>(i) + 0.5) * h[curr_index_dim];
     sum += Integrate(f, l_limits, u_limits, h, f_values, curr_index_dim + 1, dim, n);
