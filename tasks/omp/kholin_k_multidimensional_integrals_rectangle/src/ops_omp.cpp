@@ -3,12 +3,11 @@
 #include <cmath>
 #include <cstddef>
 #include <functional>
-#include <utility>
 #include <vector>
 
 double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integrate(
     const Function& f, const std::vector<double>& l_limits, const std::vector<double>& u_limits,
-    const std::vector<double>& h, std::vector<double>& f_values, int curr_index_dim, size_t dim, double n) {
+    const std::vector<double>& h, std::vector<double> f_values, int curr_index_dim, size_t dim, double n) {
   if (curr_index_dim == static_cast<int>(dim)) {
     return f(f_values);
   }

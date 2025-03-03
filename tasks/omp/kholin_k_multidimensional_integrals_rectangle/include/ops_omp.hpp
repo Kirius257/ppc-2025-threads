@@ -34,7 +34,7 @@ class TestTaskOpenMP : public ppc::core::Task {
   size_t sz_upper_limits_;
 
   double Integrate(const Function& f, const std::vector<double>& l_limits, const std::vector<double>& u_limits,
-                   const std::vector<double>& h, std::vector<double>& f_values, int curr_index_dim, size_t dim,
+                   const std::vector<double>& h, std::vector<double> f_values, int curr_index_dim, size_t dim,
                    double n);
   double IntegrateWithRectangleMethod(const Function& f, std::vector<double>& f_values,
                                       const std::vector<double>& l_limits, const std::vector<double>& u_limits,
