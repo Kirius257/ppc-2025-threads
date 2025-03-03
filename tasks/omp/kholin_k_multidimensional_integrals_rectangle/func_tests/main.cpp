@@ -149,9 +149,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var)
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
-  auto f = [](const std::vector<double> &f_values) { return std::sin(f_values[0]); };
-  std::vector<double> in_lower_limits{0};
-  std::vector<double> in_upper_limits{1};
+  auto f = [](const std::vector<double> &f_values) { return f_values[0]; };
+  std::vector<double> in_lower_limits{2};
+  std::vector<double> in_upper_limits{4};
   double n = 4002.0;
   std::vector<double> out_i(1, 0.0);
 
@@ -178,7 +178,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var)
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 0.46;
+  double ref_i = 6;
   ASSERT_NEAR(ref_i, out_i[0], 1e-2);
   delete f_object;
 }
@@ -225,9 +225,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var)
   // Create data
   size_t dim = 2;
   std::vector<double> values{0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) { return (f_values[0] + (2.0 * f_values[1])); };
+  auto f = [](const std::vector<double> &f_values) { return (f_values[0] + f_values[1]); };
   std::vector<double> in_lower_limits{0, 0};
-  std::vector<double> in_upper_limits{4, 2};
+  std::vector<double> in_upper_limits{3, 3};
   double n = 350.0;
   std::vector<double> out_i(1, 0.0);
 
@@ -254,7 +254,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var)
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 32.0;
+  double ref_i = 27.0;
   ASSERT_EQ(ref_i, std::round(out_i[0]));
   delete f_object;
 }
@@ -304,7 +304,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   auto f = [](const std::vector<double> &f_values) { return f_values[0] + f_values[1] + f_values[2]; };
   std::vector<double> in_lower_limits{0, 0, 0};
   std::vector<double> in_upper_limits{2, 2, 2};
-  double n = 50.0;
+  double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
   auto *f_object = new std::function<double(const std::vector<double> &)>(f);
@@ -423,7 +423,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   };
   std::vector<double> in_lower_limits{0, 0, 0};
   std::vector<double> in_upper_limits{1, 1, 1};
-  double n = 100.0;
+  double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
   auto *f_object = new std::function<double(const std::vector<double> &)>(f);
