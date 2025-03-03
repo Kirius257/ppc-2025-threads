@@ -25,13 +25,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_pipeline_run) {
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
@@ -77,13 +77,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, test_task_run) {
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto *f_object = new std::function<double(const std::vector<double> &)>(f);
+  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
 
   // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_omp = std::make_shared<ppc::core::TaskData>();
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object));
+  task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
   task_data_omp->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
