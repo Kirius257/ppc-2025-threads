@@ -379,9 +379,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_one_var)
   size_t dim = 3;
   std::vector<double> values{0.0, 5.0, -10.0};
   auto f = [](const std::vector<double> &f_values) { return f_values[0] + 5.0 + (-10.0); };
-  std::vector<double> in_lower_limits{0, 5, -3};
-  std::vector<double> in_upper_limits{12, 20, 2};
-  double n = 175.0;
+  std::vector<double> in_lower_limits{0, 0, 0};
+  std::vector<double> in_upper_limits{2, 1, 3};
+  double n = 200.0;
   std::vector<double> out_i(1, 0.0);
 
   auto *f_object = new std::function<double(const std::vector<double> &)>(f);
@@ -407,7 +407,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_one_var)
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 900;
+  double ref_i = -24;
   ASSERT_EQ(ref_i, std::round(out_i[0]));
   delete f_object;
 }
