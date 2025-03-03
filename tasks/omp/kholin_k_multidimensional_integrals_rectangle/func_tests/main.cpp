@@ -341,9 +341,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_two_var)
   size_t dim = 3;
   std::vector<double> values{0.0, 5.0, 0.0};
   auto f = [](const std::vector<double> &f_values) { return f_values[0] + 5.0 + f_values[2]; };
-  std::vector<double> in_lower_limits{0, 5, -3};
+  std::vector<double> in_lower_limits{0, 0, -3};
   std::vector<double> in_upper_limits{12, 20, 2};
-  double n = 150.0;
+  double n = 250.0;
   std::vector<double> out_i(1, 0.0);
 
   auto *f_object = new std::function<double(const std::vector<double> &)>(f);
