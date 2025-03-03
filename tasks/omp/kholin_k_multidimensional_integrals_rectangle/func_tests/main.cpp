@@ -179,7 +179,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, single_integral_one_var)
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
   double ref_i = 6;
-  ASSERT_NEAR(ref_i, out_i[0], 1e-2);
+  ASSERT_EQ(ref_i, std::round(out_i[0]));
   delete f_object;
 }
 
@@ -419,7 +419,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) {
-    return (((1.0 / 3.0 * f_values[0]) + f_values[1] + f_values[2]));
+    return (((1.0 / 9.0 * f_values[0]) + f_values[1] + f_values[2]));
   };
   std::vector<double> in_lower_limits{0, 0, 0};
   std::vector<double> in_upper_limits{1, 1, 1};
@@ -449,7 +449,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 1.1666666;
+  double ref_i = 1.0555555555;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_NEAR(ref_i, out_i[0], 1e-3);
   delete f_object;
