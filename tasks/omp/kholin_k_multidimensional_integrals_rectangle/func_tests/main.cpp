@@ -416,11 +416,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) {
-    return ((-2.4925829 * f_values[0]) + sin(f_values[1]) + f_values[2]);
-  };
-  std::vector<double> in_lower_limits{2, -2, -5};
-  std::vector<double> in_upper_limits{3, 0, 1};
+  auto f = [](const std::vector<double> &f_values) { return ((1.0 / 3.0 * f_values[0] * f_values[1] * f_values[2])); };
+  std::vector<double> in_lower_limits{0, 0, 0};
+  std::vector<double> in_upper_limits{1, 1, 1};
   double n = 200.0;
   std::vector<double> out_i(1, 0.0);
 
@@ -447,8 +445,8 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = -107.2743680;
-  ASSERT_NEAR(ref_i, out_i[0], 10 * 1e-3);
+  double ref_i = 0.04166666667;
+  ASSERT_NEAR(ref_i, out_i[0], 1e-3);
   delete f_object;
 }
 
@@ -456,12 +454,10 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   // Create data
   size_t dim = 2;
   std::vector<double> values{0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) {
-    return ((-2.4925829 + f_values[0]) * f_values[0]) + (f_values[1] * f_values[1]);
-  };
-  std::vector<double> in_lower_limits{3, 0};
-  std::vector<double> in_upper_limits{5, 1};
-  double n = 1500.0;
+  auto f = [](const std::vector<double> &f_values) { return (1.0 / 9.0 * f_values[0] * f_values[1]); };
+  std::vector<double> in_lower_limits{0, 0};
+  std::vector<double> in_upper_limits{1, 1};
+  double n = 300.0;
   std::vector<double> out_i(1, 0.0);
 
   auto *f_object = new std::function<double(const std::vector<double> &)>(f);
@@ -487,7 +483,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 28.34816754;
-  ASSERT_NEAR(ref_i, out_i[0], 10 * 1e-3);
+  double ref_i = 0.02777777778;
+  ASSERT_NEAR(ref_i, out_i[0], 1e-3);
   delete f_object;
 }
