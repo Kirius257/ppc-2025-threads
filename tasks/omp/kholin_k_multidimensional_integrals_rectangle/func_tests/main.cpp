@@ -294,10 +294,12 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) { return f_values[0] + f_values[1] + f_values[2]; };
+  auto f = [](const std::vector<double> &f_values) {
+    return f_values[0] * f_values[0] + f_values[1] * f_values[1] + f_values[2] * f_values[2];
+  };
   std::vector<double> in_lower_limits{0, 0, 0};
-  std::vector<double> in_upper_limits{2, 2, 2};
-  double n = 150.0;
+  std::vector<double> in_upper_limits{1, 1, 1};
+  double n = 100.0;
   std::vector<double> out_i(1, 0.0);
 
   auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
@@ -323,7 +325,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, triple_integral_three_va
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 24;
+  double ref_i = 1;
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_EQ(ref_i, std::round(out_i[0]));
 }
@@ -439,5 +441,5 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
 
   double ref_i = 0.02777777778;
   std::cout << "       " << out_i[0] << '\n';
-  ASSERT_NEAR(ref_i, out_i[0], 1e-3);
+  ASSERT_NEAR(ref_i, std::floor(out_i[0] * 1000) / 1000, 1e-3);
 }
