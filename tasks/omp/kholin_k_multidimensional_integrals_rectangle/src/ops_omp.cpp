@@ -13,7 +13,7 @@ double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integr
   }
 
   double sum = 0.0;
-#pragma omp parallel for reduction(+ : sum) schedule(dynamic) num_threads(11)
+#pragma omp parallel for reduction(+ : sum) schedule(dynamic)
   for (int i = 0.0; i < static_cast<int>(n); ++i) {
     f_values[curr_index_dim] = l_limits[curr_index_dim] + (static_cast<double>(i) + 0.5) * h[curr_index_dim];
     sum += Integrate(f, l_limits, u_limits, h, f_values, curr_index_dim + 1, dim, n);
@@ -35,7 +35,8 @@ double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::Integr
 double kholin_k_multidimensional_integrals_rectangle_omp::TestTaskOpenMP::RunMultistepSchemeMethodRectangle(
     const Function& f, std::vector<double> f_values, const std::vector<double>& l_limits,
     const std::vector<double>& u_limits, size_t dim, double n) {
-  double i = IntegrateWithRectangleMethod(f, f_values, l_limits, u_limits, dim, n);
+  double i = 0.0;
+  i = IntegrateWithRectangleMethod(f, f_values, l_limits, u_limits, dim, n);
   return i;
 }
 
