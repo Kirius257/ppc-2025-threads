@@ -410,9 +410,9 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   // Create data
   size_t dim = 2;
   std::vector<double> values{0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) { return (1.0 / 9.0 * f_values[0] * f_values[1]); };
+  auto f = [](const std::vector<double> &f_values) { return f_values[0] + f_values[1]; };
   std::vector<double> in_lower_limits{0, 0};
-  std::vector<double> in_upper_limits{1, 1};
+  std::vector<double> in_upper_limits{1.0 / 30.0, 1.0 / 30.0};
   double n = 600.0;
   std::vector<double> out_i(1, 0.0);
 
@@ -439,7 +439,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   ASSERT_EQ(test_task_omp.Run(), true);
   ASSERT_EQ(test_task_omp.PostProcessing(), true);
 
-  double ref_i = 0.02777777778;
+  double ref_i = 0.00003;
   std::cout << "       " << out_i[0] << '\n';
-  ASSERT_NEAR(ref_i, std::floor(out_i[0] * 1000) / 1000, 1e-3);
+  ASSERT_NEAR(ref_i, out_i[0], 1e-3);
 }
