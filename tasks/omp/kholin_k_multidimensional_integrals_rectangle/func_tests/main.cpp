@@ -443,4 +443,4 @@ TEST(kholin_k_multidimensional_integrals_rectangle_omp, double_integral_two_var_
   std::cout << "       " << out_i[0] << '\n';
   ASSERT_NEAR(ref_i, out_i[0], 1e-3);
 }
-//
+////
