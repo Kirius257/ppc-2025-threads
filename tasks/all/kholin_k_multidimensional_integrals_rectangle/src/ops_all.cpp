@@ -10,9 +10,9 @@
 
 double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::Integrate(
     const Function& f, const std::vector<double>& l_limits, const std::vector<double>& u_limits,
-    const std::vector<double>& h, std::vector<double>& f_values, size_t curr_index_dim, size_t dim, double n) {
-  if (curr_index_dim == dim_) {
-    return f_(f_values);
+    const std::vector<double>& h, std::vector<double>& f_values, int curr_index_dim, size_t dim, double n) {
+  if (curr_index_dim == static_cast<int>(dim)) {
+    return f(f_values);
   }
 
   double sum = 0.0;
@@ -26,8 +26,8 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::Integrate
 double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::IntegrateWithRectangleMethod(
     const Function& f, std::vector<double>& f_values, const std::vector<double>& l_limits,
     const std::vector<double>& u_limits, size_t dim, double n) {
-  std::vector<double> h(dim_);
-  for (size_t i = 0; i < dim_; ++i) {
+  std::vector<double> h(dim);
+  for (size_t i = 0; i < dim; ++i) {
     h[i] = (u_limits[i] - l_limits[i]) / n;
   }
   return Integrate(f, l_limits, u_limits, h, f_values, 0, dim, n);
@@ -44,17 +44,14 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::RunMultis
     local_l_limits_ = std::vector<double>(dim);
     local_u_limits_ = std::vector<double>(dim);
   }
+  double x_range = u_limits[0] - l_limits[0];
+  local_l_limits_[0] = l_limits[0] + (rank * (x_range / size));
+  local_u_limits_[0] = l_limits[0] + ((rank + 1) * (x_range / size));
   for (size_t i = 0; i < dim_; ++i) {
-    double range = u_limits[i] - l_limits[i];
-
-    local_l_limits_[i] = l_limits[i] + (rank * (range / size));
-    local_u_limits_[i] = l_limits[i] + ((rank + 1) * (range / size));
+    local_l_limits_[i] = l_limits[i];
+    local_u_limits_[i] = u_limits[i];
   }
-  double local_result = IntegrateWithRectangleMethod(f_, f_values_, local_l_limits_, local_u_limits_, dim_, n);
-  if (dim > 1) {
-    local_result = local_result * std::pow(size, dim_ - 1);
-    std::cout << "im proc " << rank << " and my loc result is " << local_result << std::endl;  //
-  }
+  double local_result = IntegrateWithRectangleMethod(f, f_values, local_l_limits_, local_u_limits_, dim, n);
   MPI_Reduce(&local_result, &I_2n_, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   return I_2n_;
 }

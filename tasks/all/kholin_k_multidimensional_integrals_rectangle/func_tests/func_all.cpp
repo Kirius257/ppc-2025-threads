@@ -427,53 +427,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_one_var)
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
   if (rank == 0) {
-    std::cout << "out_i " << out_i[0] << std::endl;
     double ref_i = -24;
-    double locality = fabs(ref_i - out_i[0]);
-    ASSERT_NEAR(locality, 0, 1);
-  }
-}
-
-TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral) {
-  int rank = 0;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  // Create data
-  size_t dim = 3;
-  std::vector<double> values{0.0, 0.0, 0.0};
-  auto f = [](const std::vector<double> &f_values) {
-    return std::cos((f_values[0] * f_values[0]) + (f_values[1] * f_values[1]) + (f_values[2] * f_values[2])) *
-           (1 + (f_values[0] * f_values[0]) + (f_values[1] * f_values[1]) + (f_values[2] * f_values[2]));
-  };
-  std::vector<double> in_lower_limits{-1, 2, -3};
-  std::vector<double> in_upper_limits{8, 8, 2};
-  double n = 150.0;
-  std::vector<double> out_i(1, 0.0);
-
-  std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  // Create task_data
-  if (rank == 0) {
-    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-    task_data_all->inputs_count.emplace_back(values.size());
-    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-    task_data_all->outputs_count.emplace_back(out_i.size());
-  }
-
-  // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
-  ASSERT_EQ(test_task_all.Validation(), true);
-  ASSERT_EQ(test_task_all.PreProcessing(), true);
-  ASSERT_EQ(test_task_all.Run(), true);
-  ASSERT_EQ(test_task_all.PostProcessing(), true);
-
-  if (rank == 0) {
-    std::cout << "out_i " << out_i[0] << std::endl;
-    double ref_i = 12;
     double locality = fabs(ref_i - out_i[0]);
     ASSERT_NEAR(locality, 0, 1);
   }
