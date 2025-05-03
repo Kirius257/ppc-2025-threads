@@ -5,7 +5,6 @@
 #include <boost/mpi/collectives.hpp>
 #include <cmath>
 #include <cstddef>
-#include <functional>
 #include <vector>
 
 double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::Integrate(
@@ -44,14 +43,15 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::RunMultis
     local_l_limits_ = std::vector<double>(dim);
     local_u_limits_ = std::vector<double>(dim);
   }
-  double x_range = u_limits[0] - l_limits[0];
-  local_l_limits_[0] = l_limits[0] + (rank * (x_range / size));
-  local_u_limits_[0] = l_limits[0] + ((rank + 1) * (x_range / size));
   for (size_t i = 0; i < dim_; ++i) {
-    local_l_limits_[i] = l_limits[i];
-    local_u_limits_[i] = u_limits[i];
+    double range = u_limits[i] - l_limits[i];
+    local_l_limits_[i] = l_limits[i] + (rank * (range / size));
+    local_u_limits_[i] = l_limits[i] + ((rank + 1) * (range / size));
   }
   double local_result = IntegrateWithRectangleMethod(f, f_values, local_l_limits_, local_u_limits_, dim, n);
+  if (dim_ > 1) {
+    local_result = local_result * std::pow(size, dim - 1);
+  }
   MPI_Reduce(&local_result, &I_2n_, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   return I_2n_;
 }
