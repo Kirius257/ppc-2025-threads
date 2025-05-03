@@ -12,13 +12,13 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::Integrate
     const Function& f, const std::vector<double>& l_limits, const std::vector<double>& u_limits,
     const std::vector<double>& h, std::vector<double>& f_values, size_t curr_index_dim, size_t dim, double n) {
   if (curr_index_dim == dim_) {
-    return f_(f_values_);
+    return f_(f_values);
   }
 
   double sum = 0.0;
   for (size_t i = 0; i < static_cast<size_t>(n); ++i) {
-    f_values_[curr_index_dim] = l_limits[curr_index_dim] + (static_cast<double>(i) + 0.5) * h[curr_index_dim];
-    sum += Integrate(f_, l_limits, u_limits, h, f_values_, curr_index_dim + 1, dim_, n);
+    f_values[curr_index_dim] = l_limits[curr_index_dim] + (static_cast<double>(i) + 0.5) * h[curr_index_dim];
+    sum += Integrate(f, l_limits, u_limits, h, f_values, curr_index_dim + 1, dim, n);
   }
   return sum * h[curr_index_dim];
 }
@@ -41,8 +41,8 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::RunMultis
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank >= 0) {
-    local_l_limits_ = std::vector<double>(dim_);
-    local_u_limits_ = std::vector<double>(dim_);
+    local_l_limits_ = std::vector<double>(dim);
+    local_u_limits_ = std::vector<double>(dim);
   }
   for (size_t i = 0; i < dim_; ++i) {
     double range = u_limits[i] - l_limits[i];
@@ -51,8 +51,9 @@ double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::RunMultis
     local_u_limits_[i] = l_limits[i] + ((rank + 1) * (range / size));
   }
   double local_result = IntegrateWithRectangleMethod(f_, f_values_, local_l_limits_, local_u_limits_, dim_, n);
-  if (dim_ > 1) {
-    local_result = local_result * std::pow(size, dim - 1);
+  if (dim > 1) {
+    local_result = local_result * std::pow(size, dim_ - 1);
+    std::cout << "im proc " << rank << " and my loc result is " << local_result << std::endl;  //
   }
   MPI_Reduce(&local_result, &I_2n_, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   return I_2n_;
