@@ -44,7 +44,6 @@ class TestTaskALL : public ppc::core::Task {
   double RunMultistepSchemeMethodRectangle(const Function& f, std::vector<double>& f_values,
                                            const std::vector<double>& l_limits, const std::vector<double>& u_limits,
                                            int dim, double n);
-  MPI_Datatype mpi_size_t_;
 };
 
 }  // namespace kholin_k_multidimensional_integrals_rectangle_all
