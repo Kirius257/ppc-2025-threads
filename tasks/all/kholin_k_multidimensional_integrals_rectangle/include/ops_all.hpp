@@ -3,7 +3,6 @@
 #include <mpi.h>
 
 #include <boost/mpi/collectives.hpp>
-#include <cstddef>
 #include <functional>
 #include <utility>
 #include <vector>

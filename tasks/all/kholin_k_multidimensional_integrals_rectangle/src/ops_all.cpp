@@ -4,7 +4,6 @@
 
 #include <boost/mpi/collectives.hpp>
 #include <cmath>
-#include <cstddef>
 #include <vector>
 
 double kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::Integrate(
@@ -63,9 +62,9 @@ bool kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL::PreProcessi
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     // Init value for input and output
-    sz_values_ = task_data->inputs_count[0];
-    sz_lower_limits_ = task_data->inputs_count[1];
-    sz_upper_limits_ = task_data->inputs_count[2];
+    sz_values_ = static_cast<int>(task_data->inputs_count[0]);
+    sz_lower_limits_ = static_cast<int>(task_data->inputs_count[1]);
+    sz_upper_limits_ = static_cast<int>(task_data->inputs_count[2]);
 
     auto* ptr_dim = reinterpret_cast<int*>(task_data->inputs[0]);
     dim_ = *ptr_dim;
