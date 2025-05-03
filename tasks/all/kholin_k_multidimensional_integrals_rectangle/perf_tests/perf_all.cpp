@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
+#include <mpi.h>
 
-#include <boost/mpi/timer.hpp>
 #include <chrono>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -13,7 +14,7 @@
 #include "core/task/include/task.hpp"
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
@@ -74,7 +75,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_task_run) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;

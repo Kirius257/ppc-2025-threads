@@ -4,9 +4,8 @@
 
 #include <boost/mpi/collectives.hpp>
 #include <cmath>
-#include <memory>
-#include <numeric>
-#include <string>
+#include <cstddef>
+#include <functional>
 #include <utility>
 #include <vector>
 
@@ -15,7 +14,7 @@
 namespace kholin_k_multidimensional_integrals_rectangle_all {
 using Function = std::function<double(const std::vector<double>&)>;
 class TestTaskALL : public ppc::core::Task {
-  MPI_Datatype get_mpi_type();
+  MPI_Datatype GetMpiType();
 
  public:
   explicit TestTaskALL(ppc::core::TaskDataPtr task_data, std::function<double(const std::vector<double>&)> f)
@@ -40,10 +39,10 @@ class TestTaskALL : public ppc::core::Task {
   size_t sz_values_;
   size_t sz_lower_limits_;
   size_t sz_upper_limits_;
-  double I_2n;
+  double I_2n_;
 
   double Integrate(const Function& f, const std::vector<double>& l_limits, const std::vector<double>& u_limits,
-                   const std::vector<double>& h, std::vector<double>& f_values, int curr_index_dim, size_t dim,
+                   const std::vector<double>& h, std::vector<double>& f_values, size_t curr_index_dim, size_t dim,
                    double n);
   double IntegrateWithRectangleMethod(const Function& f, std::vector<double>& f_values,
                                       const std::vector<double>& l_limits, const std::vector<double>& u_limits,
@@ -51,7 +50,7 @@ class TestTaskALL : public ppc::core::Task {
   double RunMultistepSchemeMethodRectangle(const Function& f, std::vector<double>& f_values,
                                            const std::vector<double>& l_limits, const std::vector<double>& u_limits,
                                            size_t dim, double n);
-  MPI_Datatype mpi_size_t;
+  MPI_Datatype mpi_size_t_;
 };
 
 }  // namespace kholin_k_multidimensional_integrals_rectangle_all
