@@ -12,6 +12,8 @@
 #include "core/util/include/util.hpp"
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_validation) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
@@ -21,28 +23,29 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_validation) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  if (rank == 0) {
+    // Create task_data
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pre_processing) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
@@ -52,29 +55,30 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pre_processing) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_run) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
@@ -84,30 +88,31 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_run) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
@@ -117,24 +122,23 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
   double n = 10.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
@@ -142,6 +146,8 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_one_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0};
@@ -151,34 +157,37 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_one_var)
   double n = 4002.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 6;
-  ASSERT_EQ(ref_i, std::round(out_i[0]));
+  if (rank == 0) {
+    double ref_i = 6;
+    ASSERT_EQ(ref_i, std::round(out_i[0]));
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_two_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
   std::vector<double> values{0.0, 3.0};
@@ -188,35 +197,38 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_two_var)
   double n = 4000.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 8;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = 8;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_two_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 2;
   std::vector<double> values{0.0, 0.0};
@@ -226,35 +238,38 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_two_var)
   double n = 300.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 2.0;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = 2.0;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_one_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 2;
   std::vector<double> values{-17.0, 0.0};
@@ -264,35 +279,38 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_one_var)
   double n = 405.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 6027;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = 6027;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_three_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
@@ -304,35 +322,38 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_three_va
   double n = 100.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 1;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = 1;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_two_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 5.0, 0.0};
@@ -342,35 +363,38 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_two_var)
   double n = 120.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = 8;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = 8;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_one_var) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 5.0, -10.0};
@@ -380,30 +404,31 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_one_var)
   double n = 100.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all);
+  kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL test_task_all(task_data_all, f);
   ASSERT_EQ(test_task_all.Validation(), true);
   ASSERT_EQ(test_task_all.PreProcessing(), true);
   ASSERT_EQ(test_task_all.Run(), true);
   ASSERT_EQ(test_task_all.PostProcessing(), true);
 
-  double ref_i = -24;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
+  if (rank == 0) {
+    double ref_i = -24;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
 }

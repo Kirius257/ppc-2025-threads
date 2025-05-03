@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <boost/mpi/timer.hpp>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
@@ -12,6 +13,8 @@
 #include "core/task/include/task.hpp"
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
@@ -24,24 +27,24 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  auto test_task_all = std::make_shared<kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL>(task_data_all);
+  auto test_task_all =
+      std::make_shared<kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL>(task_data_all, f);
 
   // Create Perf attributes
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
@@ -59,16 +62,20 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
   // Create Perf analyzer
   auto perf_analyzer = std::make_shared<ppc::core::Perf>(test_task_all);
   perf_analyzer->PipelineRun(perf_attr, perf_results);
+  if (rank == 0) {
+    double ref_i = 12;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
   boost::mpi::communicator world;
   if (world.rank() == 0) {
     ppc::core::Perf::PrintPerfStatistic(perf_results);
   }
-  double ref_i = 12;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_task_run) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
@@ -81,24 +88,24 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_task_run) {
   double n = 150.0;
   std::vector<double> out_i(1, 0.0);
 
-  auto f_object = std::make_unique<std::function<double(const std::vector<double> &)>>(f);
-
-  // Create task_data
   std::shared_ptr<ppc::core::TaskData> task_data_all = std::make_shared<ppc::core::TaskData>();
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(f_object.get()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
-  task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
-  task_data_all->inputs_count.emplace_back(values.size());
-  task_data_all->inputs_count.emplace_back(in_lower_limits.size());
-  task_data_all->inputs_count.emplace_back(in_upper_limits.size());
-  task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
-  task_data_all->outputs_count.emplace_back(out_i.size());
+  // Create task_data
+  if (rank == 0) {
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&dim));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(values.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_lower_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(in_upper_limits.data()));
+    task_data_all->inputs.emplace_back(reinterpret_cast<uint8_t *>(&n));
+    task_data_all->inputs_count.emplace_back(values.size());
+    task_data_all->inputs_count.emplace_back(in_lower_limits.size());
+    task_data_all->inputs_count.emplace_back(in_upper_limits.size());
+    task_data_all->outputs.emplace_back(reinterpret_cast<uint8_t *>(out_i.data()));
+    task_data_all->outputs_count.emplace_back(out_i.size());
+  }
 
   // Create Task
-  auto test_task_all = std::make_shared<kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL>(task_data_all);
+  auto test_task_all =
+      std::make_shared<kholin_k_multidimensional_integrals_rectangle_all::TestTaskALL>(task_data_all, f);
 
   // Create Perf attributes
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
@@ -116,11 +123,13 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_task_run) {
   // Create Perf analyzer
   auto perf_analyzer = std::make_shared<ppc::core::Perf>(test_task_all);
   perf_analyzer->TaskRun(perf_attr, perf_results);
+  if (rank == 0) {
+    double ref_i = 12;
+    double locality = fabs(ref_i - out_i[0]);
+    ASSERT_NEAR(locality, 0, 1);
+  }
   boost::mpi::communicator world;
   if (world.rank() == 0) {
     ppc::core::Perf::PrintPerfStatistic(perf_results);
   }
-  double ref_i = 12;
-  double locality = fabs(ref_i - out_i[0]);
-  ASSERT_NEAR(locality, 0, 1);
 }
