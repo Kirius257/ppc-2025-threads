@@ -1,7 +1,5 @@
 #pragma once
 
-#include <mpi.h>
-
 #include <boost/mpi/collectives.hpp>
 #include <functional>
 #include <utility>
