@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <mpi.h>
 
 #include <cmath>
 #include <cstddef>
@@ -9,10 +10,9 @@
 
 #include "all/kholin_k_multidimensional_integrals_rectangle/include/ops_all.hpp"
 #include "core/task/include/task.hpp"
-#include "core/util/include/util.hpp"
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_validation) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -44,7 +44,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_validation) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pre_processing) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -77,7 +77,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pre_processing) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_run) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -111,7 +111,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_run) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -146,7 +146,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_one_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -186,7 +186,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_one_var)
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_two_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 1;
@@ -227,7 +227,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_two_var)
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_two_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 2;
@@ -268,7 +268,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_two_var)
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_one_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 2;
@@ -309,7 +309,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_one_var)
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_three_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
@@ -352,7 +352,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_three_va
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_two_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
@@ -393,7 +393,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_two_var)
 }
 
 TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_one_var) {
-  int rank;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
   size_t dim = 3;
