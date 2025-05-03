@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -16,7 +17,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pipeline_run) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 3;
+  size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) {
     return std::cos((f_values[0] * f_values[0]) + (f_values[1] * f_values[1]) + (f_values[2] * f_values[2])) *
@@ -77,7 +78,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_task_run) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 3;
+  size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) {
     return std::cos((f_values[0] * f_values[0]) + (f_values[1] * f_values[1]) + (f_values[2] * f_values[2])) *

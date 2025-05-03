@@ -2,6 +2,7 @@
 #include <mpi.h>
 
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -14,7 +15,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_validation) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0};
   auto f = [](const std::vector<double> &f_values) { return std::sin(f_values[0]); };
   std::vector<double> in_lower_limits{0};
@@ -46,7 +47,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_pre_processing) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0};
   auto f = [](const std::vector<double> &f_values) { return std::sin(f_values[0]); };
   std::vector<double> in_lower_limits{0};
@@ -79,7 +80,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_run) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0};
   auto f = [](const std::vector<double> &f_values) { return std::sin(f_values[0]); };
   std::vector<double> in_lower_limits{0};
@@ -113,7 +114,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, test_post_processing) {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0};
   auto f = [](const std::vector<double> &f_values) { return std::sin(f_values[0]); };
   std::vector<double> in_lower_limits{0};
@@ -148,7 +149,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_one_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0};
   auto f = [](const std::vector<double> &f_values) { return f_values[0]; };
   std::vector<double> in_lower_limits{2};
@@ -188,7 +189,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, single_integral_two_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 1;
+  size_t dim = 1;
   std::vector<double> values{0.0, 3.0};
   auto f = [](const std::vector<double> &f_values) { return f_values[0] + f_values[1]; };
   std::vector<double> in_lower_limits{0};
@@ -229,7 +230,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_two_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 2;
+  size_t dim = 2;
   std::vector<double> values{0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) { return (2 * f_values[0]) + (2 * f_values[1]); };
   std::vector<double> in_lower_limits{0, 0};
@@ -270,7 +271,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, double_integral_one_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 2;
+  size_t dim = 2;
   std::vector<double> values{-17.0, 0.0};
   auto f = [](const std::vector<double> &f_values) { return 289 + (f_values[1] * f_values[1]); };
   std::vector<double> in_lower_limits{-10, 3};
@@ -311,7 +312,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_three_va
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 3;
+  size_t dim = 3;
   std::vector<double> values{0.0, 0.0, 0.0};
   auto f = [](const std::vector<double> &f_values) {
     return (f_values[0] * f_values[0]) + (f_values[1] * f_values[1]) + (f_values[2] * f_values[2]);
@@ -354,7 +355,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_two_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 3;
+  size_t dim = 3;
   std::vector<double> values{0.0, 5.0, 0.0};
   auto f = [](const std::vector<double> &f_values) { return (f_values[0] + f_values[1]); };
   std::vector<double> in_lower_limits{0, 0, 0};
@@ -395,7 +396,7 @@ TEST(kholin_k_multidimensional_integrals_rectangle_all, triple_integral_one_var)
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // Create data
-  int dim = 3;
+  size_t dim = 3;
   std::vector<double> values{0.0, 5.0, -10.0};
   auto f = [](const std::vector<double> &f_values) { return f_values[0] + 5.0 + (-10.0); };
   std::vector<double> in_lower_limits{0, 0, 0};
